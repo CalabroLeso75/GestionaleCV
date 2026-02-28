@@ -1,0 +1,18 @@
+Failed to create repo: Array
+(
+    [message] => Repository creation failed.
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [resource] => Repository
+                    [code] => custom
+                    [field] => name
+                    [message] => name already exists on this account
+                )
+
+        )
+
+    [documentation_url] => https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user
+    [status] => 422
+)

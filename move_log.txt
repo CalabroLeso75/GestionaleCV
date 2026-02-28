@@ -1,0 +1,6 @@
+Starting move operation 
+Moving artisan... 
+        1 file spostato/i.
+Moving app folder... 
+
+Operation completed. 

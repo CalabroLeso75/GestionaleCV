@@ -1,0 +1,15 @@
+Sync Log - 2026-02-24 17:57:39
+Success: soup
+Success: cop-cosenza
+Success: cop-catanzaro
+Success: cop-crotone
+Success: cop-vibo-valentia
+Success: cop-reggio-calabria
+Success: antincendio-boschivo
+Success: emergenze-pc
+Success: mezzi-aerei
+Success: squadre-aib-pc
+Success: mezzi-terra
+Success: utenze-aziendali
+Success: turnazioni-aib
+Sync Finished Successfully

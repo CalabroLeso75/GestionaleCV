@@ -1,0 +1,23 @@
+ID | SLUG | NAME | ACTIVE
+1 | risorse-umane | Risorse Umane | 1
+2 | forestazione | Forestazione | 1
+3 | autoparco | Autoparco | 1
+4 | magazzino | Magazzino | 1
+5 | soup | Sala Operativa Unificata Permanente (SOUP) | 1
+6 | cop-nord | Centro Operativo Provinciale Area Nord | 1
+7 | cop-centro | Centro Operativo Provinciale Area Centro | 1
+8 | cop-sud | Centro Operativo Provinciale Area Sud | 1
+9 | vivai | Vivai | 1
+10 | antincendio-boschivo | Antincendio Boschivo | 1
+11 | protezione-civile | Supporto Protezione Civile | 1
+24 | cop-cosenza | Centro Operativo Provinciale di Cosenza (COPCS) | 1
+25 | cop-catanzaro | Centro Operativo Provinciale di Catanzaro (COPCZ) | 1
+26 | cop-crotone | Centro Operativo Provinciale di Crotone (COPKR) | 1
+27 | cop-vibo-valentia | Centro Operativo Provinciale di Vibo Valentia (COPVV) | 1
+28 | cop-reggio-calabria | Centro Operativo Provinciale di Reggio Calabria (COPRC) | 1
+30 | emergenze-pc | Gestione delle Emergenze di Protezione Civile | 1
+31 | mezzi-aerei | Gestione dei Mezzi Aerei Regionali | 1
+32 | squadre-aib-pc | Gestione delle Squadre AIB e Supporto PC | 1
+33 | mezzi-terra | Gestione dei Mezzi di terra | 1
+34 | utenze-aziendali | Gestione Utenze Telefoni e indirizzi di posta aziendali | 1
+35 | turnazioni-aib | Gestione turnazioni personale AIB | 1
