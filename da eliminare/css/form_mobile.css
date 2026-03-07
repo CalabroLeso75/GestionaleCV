@@ -1,0 +1,122 @@
+/* Impostazioni generali mobile */
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #222;
+}
+
+/* Contenitore principale */
+.conversion-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Intestazioni visibili */
+h2.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Fieldset mobile friendly */
+fieldset {
+  border: 2px solid #ff5722;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+}
+
+/* Titolo sezione prima del box */
+legend {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff5722;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+/* Etichette visibili */
+label {
+  display: block;
+  font-weight: bold;
+  margin: 12px 0 5px;
+  font-size: 18px;
+}
+
+/* Input, Select e Button coerenti */
+input[type="text"],
+input[type="number"],
+select,
+button {
+  width: 100%;
+  font-size: 18px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Pulsanti principali */
+.orange-button {
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  font-size: 20px;
+  padding: 14px;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.orange-button:hover {
+  background-color: #e64a19;
+}
+
+/* Layout coordinata gruppi */
+.coord-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.coord-group input {
+  flex: 1;
+  min-width: 22%;
+}
+
+/* Checkbox e radio verticali */
+input[type="checkbox"],
+input[type="radio"] {
+  transform: scale(1.3);
+  margin-right: 8px;
+}
+
+/* Responsive (extra) */
+@media (max-width: 480px) {
+  h2.title {
+    font-size: 22px;
+  }
+
+  legend {
+    font-size: 18px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 16px;
+  }
+}

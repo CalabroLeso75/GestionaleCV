@@ -15,8 +15,10 @@ class AibStation extends Model
     protected $fillable = [
         'nome',
         'slug',
+        'location_id',
         'provincia',
         'comune',
+        'localita',
         'latitudine',
         'longitudine',
         'lat_dms',

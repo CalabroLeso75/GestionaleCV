@@ -35,7 +35,7 @@ class UserManagementController extends Controller
                 ->whereNull('reintegrated_at')
                 ->orderByDesc('rejected_at')
                 ->paginate(20);
-            
+
             $users = collect();
             $roles = Role::all();
             $counts = $this->getCounts();
@@ -185,7 +185,7 @@ class UserManagementController extends Controller
     {
         $user = User::findOrFail($id);
         $newType = $user->type === 'internal' ? 'external' : 'internal';
-        
+
         if ($user->internal_employee_id) {
             if ($user->type === 'internal') {
                 $emp = DB::table('internal_employees')->where('id', $user->internal_employee_id)->first();
@@ -265,6 +265,20 @@ class UserManagementController extends Controller
         return back()->with('success', "Ruoli rimossi da {$user->name} {$user->surname}.");
     }
 
+    public function toggleDos($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->hasRole('dos')) {
+            $user->removeRole('dos');
+            \App\Services\ActivityLogger::logSecurity("Rimossa qualifica D.O.S. all'utente {$user->name} {$user->surname}");
+            return back()->with('success', "Qualifica D.O.S. disattivata per {$user->name} {$user->surname}.");
+        } else {
+            $user->assignRole('dos');
+            \App\Services\ActivityLogger::logSecurity("Assegnata qualifica D.O.S. all'utente {$user->name} {$user->surname}");
+            return back()->with('success', "Qualifica D.O.S. attivata per {$user->name} {$user->surname}.");
+        }
+    }
+
     // ===== ADD USER FROM EMPLOYEE REGISTRY =====
 
     public function searchEmployees(Request $request)
@@ -287,7 +301,7 @@ class UserManagementController extends Controller
                 // Check if already a user
                 $alreadyUser = User::where('internal_employee_id', $emp->id)
                     ->where('type', 'internal')->exists();
-                
+
                 $results[] = [
                     'id' => $emp->id,
                     'type' => 'internal',

@@ -28,42 +28,29 @@
         </div>
         @endif
 
-        <!-- Statistiche Rapide -->
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 text-center p-3 h-100">
-                <div class="text-primary fs-2 mb-2">🚗</div>
-                <h3 class="mb-0 fw-bold">{{ $vehicles->count() }}</h3>
-                <small class="text-muted text-uppercase">Totale Mezzi</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 text-center p-3 h-100 border-start border-success border-4">
-                <div class="text-success fs-2 mb-2">✅</div>
-                <h3 class="mb-0 fw-bold">{{ $vehicles->where('stato', 'operativo')->count() }}</h3>
-                <small class="text-muted text-uppercase">Operativi</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 text-center p-3 h-100 border-start border-info border-4">
-                <div class="text-info fs-2 mb-2">🔑</div>
-                <h3 class="mb-0 fw-bold">{{ $vehicles->where('stato', 'in uso')->count() }}</h3>
-                <small class="text-muted text-uppercase">In Uso</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 text-center p-3 h-100 border-start border-danger border-4">
-                <div class="text-danger fs-3 mb-2">⚠️</div>
-                <h3 class="mb-0 fw-bold">{{ $vehicles->whereIn('stato', ['manutenzione', 'non operativo'])->count() }}</h3>
-                <small class="text-muted text-uppercase">Fermo Macchine</small>
-            </div>
-        </div>
+        {{-- Statistiche Rapide - stile Risorse Umane --}}
+        <x-kpi-card color="green"  label="Totale Mezzi"   :value="$vehicles->count()" />
+        <x-kpi-card color="blue"   label="Operativi"      :value="$vehicles->where('stato', 'operativo')->count()" />
+        <x-kpi-card color="orange" label="In Uso"          :value="$vehicles->where('stato', 'in uso')->count()" />
+        <x-kpi-card color="purple" label="Fermo Macchine" :value="$vehicles->whereIn('stato', ['manutenzione', 'non operativo'])->count()" />
         @can('vehicle.full_edit')
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 d-flex align-items-center justify-content-center h-100 bg-primary text-white" 
-                 style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
-                <div class="text-center">
-                    <div class="fs-2 mb-1">+</div>
-                    <small class="fw-bold">NUOVO MEZZO</small>
+            <div class="card shadow-sm border-0 d-flex flex-row align-items-stretch text-white h-100 overflow-hidden">
+                <div class="w-50 bg-primary d-flex align-items-center justify-content-center border-end border-light" 
+                     style="cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1"
+                     data-bs-toggle="modal" data-bs-target="#addVehicleModal" title="Inserimento Mezzo Singolo">
+                    <div class="text-center p-2">
+                        <div class="fs-3 mb-1"><i class="fas fa-car"></i></div>
+                        <small class="fw-bold" style="font-size:0.75em;">SINGOLO</small>
+                    </div>
+                </div>
+                <div class="w-50 bg-primary d-flex align-items-center justify-content-center" 
+                     style="cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1"
+                     data-bs-toggle="modal" data-bs-target="#bulkVehicleModal" title="Inserimento Multiplo">
+                    <div class="text-center p-2">
+                        <div class="fs-3 mb-1"><i class="fas fa-layer-group"></i></div>
+                        <small class="fw-bold" style="font-size:0.75em;">BLOCCO</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,14 +142,24 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($vehicle->currentLog)
+                                    @if($vehicle->activeAssignment)
                                         <div class="d-flex align-items-center">
                                             <div class="bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8em;">
-                                                {{ substr($vehicle->currentLog->user->name, 0, 1) }}{{ substr($vehicle->currentLog->user->surname, 0, 1) }}
+                                                @if($vehicle->activeAssignment->assignee)
+                                                    {{ substr($vehicle->activeAssignment->assignee->name, 0, 1) }}{{ substr($vehicle->activeAssignment->assignee->surname, 0, 1) }}
+                                                @else
+                                                    U
+                                                @endif
                                             </div>
                                             <div class="small">
-                                                <div class="fw-bold">{{ $vehicle->currentLog->user->name }} {{ $vehicle->currentLog->user->surname }}</div>
-                                                <div class="text-muted" style="font-size: 0.8em;">Dal {{ $vehicle->currentLog->assegnato_il->format('d/m H:i') }}</div>
+                                                <div class="fw-bold">
+                                                    @if($vehicle->activeAssignment->assignee)
+                                                        {{ $vehicle->activeAssignment->assignee->name }} {{ $vehicle->activeAssignment->assignee->surname }}
+                                                    @else
+                                                        N/D
+                                                    @endif
+                                                </div>
+                                                <div class="text-muted" style="font-size: 0.8em;">Dal {{ $vehicle->activeAssignment->data_assegnazione->format('d/m H:i') }}</div>
                                             </div>
                                         </div>
                                     @else
@@ -171,19 +168,19 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-outline-secondary" onclick="showVehicleDetails({{ $vehicle->id }})" title="Dettagli e Revisioni">
-                                            🔍
+                                        <button class="btn btn-outline-secondary" onclick="showVehicleDetails('{!! $vehicle->id !!}')" title="Dettagli e Revisioni">
+                                            <i class="fas fa-search me-1"></i> Dettagli
                                         </button>
                                         @if($vehicle->stato == 'operativo')
                                             @can('vehicle.assign')
                                             <button class="btn btn-outline-primary px-3" data-bs-toggle="modal" data-bs-target="#assignModal{{ $vehicle->id }}">
-                                                Assegna
+                                                <i class="fas fa-user-plus me-1"></i> Assegna
                                             </button>
                                             @endcan
                                         @elseif($vehicle->stato == 'in uso')
                                             @can('vehicle.assign')
                                             <button class="btn btn-success px-3" data-bs-toggle="modal" data-bs-target="#returnModal{{ $vehicle->id }}">
-                                                Riconsegna
+                                                <i class="fas fa-undo me-1"></i> Riconsegna
                                             </button>
                                             @endcan
                                         @endif
@@ -192,22 +189,25 @@
                             </tr>
 
                             <!-- Modals embedded in loop (simplification for now, better outside but needs mapping) -->
-                            <!-- Assign Modal -->
                             <div class="modal fade" id="assignModal{{ $vehicle->id }}" tabindex="-1">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{ route('autoparco.assign', $vehicle->id) }}">
+                                        <form method="POST" action="{{ route('pc.aib.resource_assignments.store') }}">
                                             @csrf
+                                            <input type="hidden" name="assignable_type" value="App\Models\Vehicle">
+                                            <input type="hidden" name="assignable_id" value="{{ $vehicle->id }}">
+                                            <input type="hidden" name="assignee_type" value="App\Models\InternalEmployee">
+                                            
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Assegna Mezzo: {{ $vehicle->targa }}</h5>
+                                                <h5 class="modal-title">Assegna Personale: {{ $vehicle->targa }}</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Utente</label>
-                                                    <select name="user_id" class="form-select" required>
-                                                        @foreach($users as $user)
-                                                            <option value="{{ $user->id }}">{{ $user->surname }} {{ $user->name }}</option>
+                                                    <label class="form-label">Utente (Dipendente Interno)</label>
+                                                    <select name="assignee_id" class="form-select" required>
+                                                        @foreach(\App\Models\InternalEmployee::all() as $emp)
+                                                            <option value="{{ $emp->id }}">{{ $emp->surname }} {{ $emp->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -229,10 +229,11 @@
                             </div>
 
                             <!-- Return Modal -->
+                            @if($vehicle->activeAssignment && $vehicle->stato == 'in uso')
                             <div class="modal fade" id="returnModal{{ $vehicle->id }}" tabindex="-1">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{ route('autoparco.return', $vehicle->id) }}">
+                                        <form method="POST" action="{{ route('pc.aib.resource_assignments.return', $vehicle->activeAssignment->id) }}">
                                             @csrf
                                             <div class="modal-header bg-success text-white">
                                                 <h5 class="modal-title">Riconsegna Mezzo: {{ $vehicle->targa }}</h5>
@@ -241,23 +242,23 @@
                                             <div class="modal-body text-center p-4">
                                                 <div class="fs-1 mb-3">🏁</div>
                                                 <div class="mb-3">
-                                                    <label class="form-label fw-bold">KM alla Riconsegna</label>
+                                                    <label class="form-label fw-bold">KM alla Riconsegna (Info)</label>
                                                     <input type="number" name="km_finali" class="form-control form-control-lg text-center" 
-                                                           value="{{ $vehicle->km_attuali }}" required min="{{ $vehicle->km_attuali }}">
-                                                    <div class="form-text">KM iniziali: {{ $vehicle->currentLog->km_iniziali ?? 'N/D' }}</div>
+                                                           value="{{ $vehicle->km_attuali }}" min="{{ $vehicle->km_attuali }}">
                                                 </div>
                                                 <div class="mb-3 text-start">
                                                     <label class="form-label small">Note di riconsegna (Danni, pulizia, etc.)</label>
-                                                    <textarea name="note" class="form-control" rows="2"></textarea>
+                                                    <textarea name="note" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success w-100">Concludi Utilizzo</button>
+                                                <button type="submit" class="btn btn-success w-100 fw-bold">Registra Riconsegna</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                             @empty
                             <tr>
@@ -330,7 +331,7 @@
                                         @endif
                                     </td>
                                     <td class="text-end">
-                                        <button class="btn btn-xs btn-outline-primary" onclick="manageCerts({{ $user->id }}, '{{ $user->name }} {{ $user->surname }}')">GESTISCI</button>
+                                        <button class="btn btn-xs btn-outline-primary" onclick="manageCerts('{!! $user->id !!}', '{!! $user->name !!} {!! $user->surname !!}')">GESTISCI</button>
                                     </td>
                                 </tr>
                             @empty
@@ -424,7 +425,33 @@
                                                 <tr><th class="text-muted">Fine Copertura (+15gg):</th><td id="det_ass_cop" class="text-danger">-</td></tr>
                                             </table>
                                             @can('vehicle.limited_edit')
-                                                <button class="btn btn-xs btn-outline-info w-100 small mt-2" style="font-size: 0.8em;">Aggiorna Polizza</button>
+                                                <button class="btn btn-sm btn-outline-info w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#insuranceForm" style="font-size: 0.85em;">
+                                                    ✏️ Aggiorna Polizza
+                                                </button>
+                                                <div class="collapse mt-2" id="insuranceForm">
+                                                    <form id="insuranceFormEl" method="POST" class="p-2 border rounded bg-white">
+                                                        @csrf
+                                                        <div class="row g-2">
+                                                            <div class="col-12">
+                                                                <input type="text" name="assicurazione_compagnia" id="ins_compagnia" class="form-control form-control-sm" placeholder="Compagnia">
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <input type="text" name="assicurazione_polizza" id="ins_polizza" class="form-control form-control-sm" placeholder="N° Polizza">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label form-label-sm mb-0 text-muted" style="font-size:0.75em;">Scadenza polizza</label>
+                                                                <input type="date" name="scadenza_assicurazione" id="ins_scadenza" class="form-control form-control-sm" required>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label form-label-sm mb-0 text-muted" style="font-size:0.75em;">Fine copertura</label>
+                                                                <input type="date" name="assicurazione_copertura" id="ins_copertura" class="form-control form-control-sm">
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <button type="submit" class="btn btn-sm btn-success w-100">💾 Salva Polizza</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             @endcan
                                         </div>
                                     </div>
@@ -451,7 +478,7 @@
                                                     @csrf
                                                     <div class="row g-2">
                                                         <div class="col-6"><input type="date" name="data_revisione" class="form-control form-control-sm" required></div>
-                                                        <div class="col-6"><input type="number" name="km_rilevati" class="form-control form-control-sm" placeholder="KM rilevati" required></div>
+                                                        <div class="col-6"><input type="number" id="rev_km_rilevati" name="km_rilevati" class="form-control form-control-sm" placeholder="KM rilevati" required></div>
                                                         <div class="col-12">
                                                             <select name="esito" class="form-select form-select-sm" required>
                                                                 <option value="regolare">Regolare</option>
@@ -480,6 +507,9 @@
                                                         <th>Esito</th>
                                                         <th>KM al momento</th>
                                                         <th>Note</th>
+                                                        @can('vehicle.full_edit')
+                                                        <th>Azioni</th>
+                                                        @endcan
                                                     </tr>
                                                 </thead>
                                                 <tbody id="det_revisions_list">
@@ -519,9 +549,12 @@
         </div>
     </div>
 
+    <script id="vehicle-types-data" type="application/json">
+        {!! json_encode($vehicleTypes) !!}
+    </script>
     <script>
         window.BOOTSTRAP_ITALIA_SPRITES = "{{ asset('public/sprites.php') }}";
-        window.vehicleTypes = @json($vehicleTypes);
+        window.vehicleTypes = JSON.parse(document.getElementById('vehicle-types-data').textContent);
         let currentVehicleId = null;
 
         function showNormativeDetails(vtId, type = 'add') {
@@ -577,6 +610,19 @@
                     document.getElementById('det_km').innerText = `${v.km_attuali.toLocaleString()} km`;
                     document.getElementById('det_stato').innerText = v.stato.toUpperCase();
                     
+                    const revKmInput = document.getElementById('rev_km_rilevati');
+                    if(revKmInput) {
+                        let minRevKm = 0;
+                        if (v.revisions && v.revisions.length > 0) {
+                            minRevKm = Math.max(...v.revisions.map(r => r.km_rilevati || 0));
+                        }
+                        revKmInput.min = minRevKm;
+                        revKmInput.placeholder = "KM rilevati (\u2265 " + minRevKm + ")";
+                        revKmInput.value = '';
+                    }
+                    
+                    const isAdmin = {{ auth()->user()->can('vehicle.full_edit') ? 'true' : 'false' }};
+                    
                     const statoSelect = document.getElementById('det_stato_select');
                     if (statoSelect) statoSelect.value = v.stato;
                     
@@ -603,17 +649,40 @@
                     const revisionForm = document.getElementById('revisionForm');
                     if (revisionForm) revisionForm.action = `{{ url('/autoparco') }}/${id}/revision`;
                     
+                    const insuranceFormEl = document.getElementById('insuranceFormEl');
+                    if (insuranceFormEl) {
+                        insuranceFormEl.action = `{{ url('/autoparco') }}/${id}/insurance`;
+                        // Pre-fill current values
+                        const fmi = (d) => d ? d.split('T')[0].split(' ')[0] : '';
+                        document.getElementById('ins_compagnia').value = v.assicurazione_compagnia || '';
+                        document.getElementById('ins_polizza').value = v.assicurazione_polizza || '';
+                        document.getElementById('ins_scadenza').value = fmi(v.scadenza_assicurazione);
+                        document.getElementById('ins_copertura').value = fmi(v.assicurazione_copertura);
+                    }
+                    
                     // Revisions list
                     const tbody = document.getElementById('det_revisions_list');
                     tbody.innerHTML = '';
                     if (v.revisions && v.revisions.length > 0) {
                         v.revisions.forEach(rev => {
+                            let actionCol = '';
+                            if (isAdmin) {
+                                actionCol = `<td>
+                                    <form action="{{ url('/autoparco/revision') }}/${rev.id}" method="POST" style="display:inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questa revisione? L\\'operazione è irreversibile.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-outline-danger py-0 px-2" title="Elimina Revisione"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>`;
+                            }
+                            
                             tbody.innerHTML += `
                                 <tr>
-                                    <td>${new Date(rev.data_revisione).toLocaleDateString()}</td>
+                                    <td>${fmtDateDisplay(rev.data_revisione)}</td>
                                     <td><span class="badge ${rev.esito === 'regolare' ? 'bg-success' : 'bg-warning'}">${rev.esito.toUpperCase()}</span></td>
                                     <td>${rev.km_rilevati ? rev.km_rilevati.toLocaleString() : '-'} km</td>
                                     <td>${rev.note || '-'}</td>
+                                    ${actionCol}
                                 </tr>
                             `;
                         });
@@ -759,6 +828,41 @@
                 }
             }
         });
+
+        // Handle insurance form submit via AJAX
+        document.getElementById('insuranceFormEl')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const fd = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Salvataggio...';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: fd,
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    const collapseEl = document.getElementById('insuranceForm');
+                    if (collapseEl) bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                    showVehicleDetails(currentVehicleId);
+                    btn.textContent = '✅ Salvato';
+                    setTimeout(() => { btn.disabled = false; btn.textContent = '💾 Salva Polizza'; }, 2000);
+                } else {
+                    alert(res.message || 'Errore durante il salvataggio');
+                    btn.disabled = false;
+                    btn.textContent = '💾 Salva Polizza';
+                }
+            })
+            .catch(() => {
+                alert('Errore di rete. Riprova.');
+                btn.disabled = false;
+                btn.textContent = '💾 Salva Polizza';
+            });
+        });
     </script>
     <!-- Add Vehicle Modal -->
     <div class="modal fade" id="addVehicleModal" tabindex="-1">
@@ -842,9 +946,83 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Vehicle Modal -->
+    <div class="modal fade" id="bulkVehicleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('autoparco.bulkStore') }}">
+                    @csrf
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title"><i class="fas fa-layer-group me-2"></i>Inserimento Mezzi in Blocco</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info py-2 px-3 small border-0 mt-2">
+                            <i class="fas fa-info-circle me-2"></i>Tutte le targhe comprese tra l'iniziale e la finale verranno generate automaticamente (es. da AA000AA a AA010AA).
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Targa Iniziale *</label>
+                                <input type="text" name="targa_iniziale" class="form-control" placeholder="es. ES760CH" required style="text-transform: uppercase;" minlength="7" maxlength="7">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Targa Finale *</label>
+                                <input type="text" name="targa_finale" class="form-control" placeholder="es. ES779CH" required style="text-transform: uppercase;" minlength="7" maxlength="7">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Targhe da Escludere</label>
+                                <input type="text" name="escludi_targhe" class="form-control" placeholder="es. ES769CH, ES771CH (separate da virgola)">
+                                <div class="small text-muted mt-1">Opzionale. Puoi anche inserire solo i numeri se la serie lettere è identica (es. "769, 771").</div>
+                            </div>
+                            
+                            <hr class="my-3">
+                            <h6 class="mb-0 text-primary">Dati Comuni per il Blocco</h6>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Marca *</label>
+                                <input type="text" name="marca" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Modello *</label>
+                                <input type="text" name="modello" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo Mezzo *</label>
+                                <select name="tipo" class="form-select" required>
+                                    <option value="Auto">Autovettura Standard</option>
+                                    <option value="Pickup">Pickup con modulo AIB</option>
+                                    <option value="Autobotte">Autobotte</option>
+                                    <option value="Mezzo 9 posti">Trasporto Personale (9 posti)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Normativa / Classificazione *</label>
+                                <select name="vehicle_type_id" class="form-select" required>
+                                    <option value="">Seleziona...</option>
+                                    @foreach($vehicleTypes as $vt)
+                                        <option value="{{ $vt->id }}">{{ $vt->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Mese Imm. (1-12)</label>
+                                <input type="number" name="immatricolazione_mese" class="form-control" min="1" max="12">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Anno Imm.</label>
+                                <input type="number" name="immatricolazione_anno" class="form-control" min="1900" max="2099">
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                        <button type="submit" class="btn btn-primary px-4">Salva Mezzo</button>
+                        <button type="submit" class="btn btn-primary px-4"><i class="fas fa-magic me-2"></i>Genera Mezzi</button>
                     </div>
                 </form>
             </div>
@@ -1033,4 +1211,7 @@
             </div>
         </div>
     </div>
+
+    <x-back-button :url="route('dashboard')" label="← Torna alla Dashboard" />
+
 </x-app-layout>

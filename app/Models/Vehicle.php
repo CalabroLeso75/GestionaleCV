@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Vehicle extends Model
 {
@@ -43,6 +44,23 @@ class Vehicle extends Model
         'scadenza_verifica_sicurezza' => 'date'
     ];
 
+    protected static function booted()
+    {
+        static::saving(function ($vehicle) {
+            $hasValidInsurance = $vehicle->scadenza_assicurazione && Carbon::parse($vehicle->scadenza_assicurazione)->addDays(15)->isFuture();
+            $hasValidRevision = $vehicle->scadenza_revisione && Carbon::parse($vehicle->scadenza_revisione)->isFuture();
+
+            // Solo se lo stato attuale è manca copertura, operativo o vuoto
+            if (in_array($vehicle->stato, ['operativo', 'manca copertura assicurativa o revisione', 'manca copertura', null])) {
+                if ($hasValidInsurance && $hasValidRevision) {
+                    $vehicle->stato = 'operativo';
+                } else {
+                    $vehicle->stato = 'manca copertura assicurativa o revisione';
+                }
+            }
+        });
+    }
+
     public function vehicleType()
     {
         return $this->belongsTo(VehicleType::class);
@@ -51,6 +69,27 @@ class Vehicle extends Model
     public function revisions()
     {
         return $this->hasMany(VehicleRevision::class);
+    }
+
+    public function teamVehicles()
+    {
+        return $this->hasMany(AibTeamVehicle::class);
+    }
+    
+    /**
+     * Get all of the vehicle's resource assignments.
+     */
+    public function resourceAssignments()
+    {
+        return $this->morphMany(ResourceAssignment::class, 'assignable');
+    }
+
+    /**
+     * Get the currently active resource assignment.
+     */
+    public function activeAssignment()
+    {
+        return $this->morphOne(ResourceAssignment::class, 'assignable')->whereNull('data_restituzione');
     }
 
     public function logs()

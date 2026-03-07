@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!-- nomefile: seleziona_punto_mappa.html-->
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Seleziona Punto su Mappa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    #usaPunto {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      padding: 10px 20px;
+      background: orange;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .leaflet-tooltip {
+      background: #fff;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-weight: bold;
+    }
+    .layer-buttons {
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .layer-buttons button {
+      padding: 5px 10px;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      border-radius: 4px;
+      cursor: pointer;
+.leaflet-control-geocoder {
+  position: absolute !important;
+  top: 50px !important; 
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999;
+}
+
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <button id="usaPunto">Usa questo punto</button>
+  <div class="layer-buttons">
+    <button id="stradaleBtn">Vista Stradale</button>
+    <button id="satelliteBtn">Vista Satellitare</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+  <script>
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    });
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri'
+    });
+
+    const map = L.map('map', {
+      layers: [satelliteLayer]
+    }).setView([38.9, 16.6], 12);
+
+    document.getElementById("stradaleBtn").addEventListener("click", () => {
+      map.removeLayer(satelliteLayer);
+      map.addLayer(osmLayer);
+    });
+
+    document.getElementById("satelliteBtn").addEventListener("click", () => {
+      map.removeLayer(osmLayer);
+      map.addLayer(satelliteLayer);
+    });
+
+    let userLatLng = [38.9, 16.6];
+    let userMarker = null;
+    let selectedMarker = null;
+    let line = null;
+    let tooltip = null;
+
+    const geocoder = L.Control.geocoder({ defaultMarkGeocode: false })
+      .on('markgeocode', function(e) {
+        const latlng = e.geocode.center;
+        map.setView(latlng, 16);
+        if (selectedMarker) {
+          selectedMarker.setLatLng(latlng);
+          updateLine(userLatLng, [latlng.lat, latlng.lng]);
+        }
+      }).addTo(map);
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      userLatLng = [pos.coords.latitude, pos.coords.longitude];
+      map.setView(userLatLng, 15);
+
+      userMarker = L.marker(userLatLng, { draggable: false }).addTo(map)
+        .bindTooltip("Tua posizione").openTooltip();
+
+      selectedMarker = L.marker(userLatLng, { draggable: true }).addTo(map);
+      updateLine(userLatLng, userLatLng);
+
+      selectedMarker.on("drag", () => {
+        const selectedLatLng = selectedMarker.getLatLng();
+        updateLine(userLatLng, [selectedLatLng.lat, selectedLatLng.lng]);
+      });
+
+      map.on("click", e => {
+        selectedMarker.setLatLng(e.latlng);
+        updateLine(userLatLng, [e.latlng.lat, e.latlng.lng]);
+      });
+    });
+
+    function updateLine(start, end) {
+      if (line) map.removeLayer(line);
+      if (tooltip) map.removeLayer(tooltip);
+
+      line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+
+      const distance = turf.distance(
+        turf.point([start[1], start[0]]),
+        turf.point([end[1], end[0]]),
+        { units: 'kilometers' }
+      );
+
+      const midLat = (start[0] + end[0]) / 2;
+      const midLng = (start[1] + end[1]) / 2;
+
+      tooltip = L.tooltip({ permanent: true, direction: 'center', className: 'leaflet-tooltip' })
+        .setLatLng([midLat, midLng])
+        .setContent(`${(distance * 1000).toFixed(0)} m`)
+        .addTo(map);
+    }
+
+    document.getElementById("usaPunto").addEventListener("click", () => {
+      const latlng = selectedMarker.getLatLng();
+      window.opener.postMessage({ lat: latlng.lat, lng: latlng.lng }, "*");
+      window.close();
+    });
+  </script>
+</body>
+</html>

@@ -73,27 +73,27 @@
     <!-- Header con pulsante Aggiungi -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('admin.users.index') }}" 
+            <a href="{{ route('admin.users.index') }}"
                class="btn btn-sm {{ $filter === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
                 Tutti <span class="badge bg-light text-dark ms-1">{{ $counts['all'] }}</span>
             </a>
-            <a href="{{ route('admin.users.index', ['filter' => 'pending']) }}" 
+            <a href="{{ route('admin.users.index', ['filter' => 'pending']) }}"
                class="btn btn-sm {{ $filter === 'pending' ? 'btn-warning' : 'btn-outline-warning' }}">
                 In attesa <span class="badge bg-light text-dark ms-1">{{ $counts['pending'] }}</span>
             </a>
-            <a href="{{ route('admin.users.index', ['filter' => 'active']) }}" 
+            <a href="{{ route('admin.users.index', ['filter' => 'active']) }}"
                class="btn btn-sm {{ $filter === 'active' ? 'btn-success' : 'btn-outline-success' }}">
                 Attivi <span class="badge bg-light text-dark ms-1">{{ $counts['active'] }}</span>
             </a>
-            <a href="{{ route('admin.users.index', ['filter' => 'suspended']) }}" 
+            <a href="{{ route('admin.users.index', ['filter' => 'suspended']) }}"
                class="btn btn-sm {{ $filter === 'suspended' ? 'btn-secondary' : 'btn-outline-secondary' }}">
                 Disattivati <span class="badge bg-light text-dark ms-1">{{ $counts['suspended'] }}</span>
             </a>
-            <a href="{{ route('admin.users.index', ['filter' => 'norole']) }}" 
+            <a href="{{ route('admin.users.index', ['filter' => 'norole']) }}"
                class="btn btn-sm {{ $filter === 'norole' ? 'btn-danger' : 'btn-outline-danger' }}">
                 Senza ruolo <span class="badge bg-light text-dark ms-1">{{ $counts['norole'] }}</span>
             </a>
-            <a href="{{ route('admin.users.index', ['filter' => 'rejected']) }}" 
+            <a href="{{ route('admin.users.index', ['filter' => 'rejected']) }}"
                class="btn btn-sm {{ $filter === 'rejected' ? 'btn-dark' : 'btn-outline-dark' }}">
                 🚫 Rifiutati/Eliminati <span class="badge bg-light text-dark ms-1">{{ $counts['rejected'] }}</span>
             </a>
@@ -132,7 +132,7 @@
                         </td>
                         <td class="text-muted">{{ $rej->rejection_reason ?? '—' }}</td>
                         <td class="text-end">
-                            <form method="POST" action="{{ route('admin.users.reintegrate', $rej->id) }}" 
+                            <form method="POST" action="{{ route('admin.users.reintegrate', $rej->id) }}"
                                   class="d-inline" onsubmit="return confirm('Reintegrare {{ $rej->name }} {{ $rej->surname }}?\nVerrà ri-creato come utente attivo.')">
                                 @csrf
                                 <button type="submit" class="btn btn-success btn-action">♻️ Reintegra</button>
@@ -202,10 +202,11 @@
                             @if($user->status === 'pending')
                                 <span class="badge-cell badge-cell-status bg-warning text-dark">In attesa</span>
                             @elseif(!$isSuperAdmin)
+                                @php $confirmMsg = ($user->status === 'active' ? 'Disattivare ' : 'Riattivare ') . $user->name . ' ' . $user->surname . '?'; @endphp
                                 <form method="POST" action="{{ route('admin.users.toggleStatus', $user->id) }}" class="d-inline"
-                                      onsubmit="return confirm('{{ $user->status === 'active' ? 'Disattivare' : 'Riattivare' }} {{ $user->name }} {{ $user->surname }}?')">
+                                      onsubmit="return confirm('{{ $confirmMsg }}')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-cell btn-cell-status {{ $user->status === 'active' ? 'btn-success' : 'btn-secondary' }}" 
+                                    <button type="submit" class="btn btn-sm btn-cell btn-cell-status {{ $user->status === 'active' ? 'btn-success' : 'btn-secondary' }}"
                                             title="Clicca per {{ $user->status === 'active' ? 'disattivare' : 'riattivare' }}">
                                         {{ $user->status === 'active' ? '✓ Attivo' : '⏸ Disattivato' }}
                                     </button>
@@ -224,7 +225,7 @@
                                     <span class="badge" style="background-color: #f8f9fa; color: #333; border: 1px solid #ddd; font-size: 0.7em; padding: 2px 6px;">
                                         {{ $ar->area }}
                                     </span>
-                                    <span class="badge text-white shadow-sm" style="background-color: {{ $lc }}; font-size: 0.65em; padding: 2px 6px;">
+                                    <span class="badge text-white shadow-sm" {!! 'style="background-color: ' . $lc . '; font-size: 0.65em; padding: 2px 6px;"' !!}>
                                         L{{ $ar->privilege_level }}
                                     </span>
                                     <form method="POST" action="{{ route('admin.users.removeAreaRole', $ar->id) }}" class="d-inline" onsubmit="return confirm('Rimuovere abilitazione {{ $ar->area }}?')">
@@ -253,11 +254,19 @@
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-action">✓</button>
                                     </form>
-                                    <button type="button" class="btn btn-danger btn-action" 
+                                    <button type="button" class="btn btn-danger btn-action"
                                             onclick="document.getElementById('reject-{{ $user->id }}').style.display='block'">✗</button>
                                 @endif
                                 @if($user->status === 'active' || $user->status === 'suspended')
-                                    <div class="dropdown d-inline">
+                                    <form method="POST" action="{{ route('admin.users.toggleDos', $user->id) }}" class="d-inline" title="Qualifica Direttore Operazioni Spegnimento">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-action {{ $user->hasRole('dos') ? 'btn-danger text-white fw-bold' : 'btn-outline-danger' }}"
+                                                style="border: 1px solid #dc3545;">
+                                            🚒 {{ $user->hasRole('dos') ? 'DOS ✓' : 'DOS' }}
+                                        </button>
+                                    </form>
+
+                                    <div class="dropdown d-inline ms-1">
                                         <button class="btn btn-outline-secondary btn-action dropdown-toggle" data-bs-toggle="dropdown">Ruolo</button>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             @foreach($roles as $role)
@@ -338,7 +347,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <input type="text" id="empSearchInput" class="form-control" 
+                        <input type="text" id="empSearchInput" class="form-control"
                                placeholder="Cerca per nome, cognome o codice fiscale..." autofocus>
                         <small class="text-muted">Digita almeno 2 caratteri per cercare</small>
                     </div>
@@ -480,10 +489,13 @@
         </div>
     </div>
 
+    <script id="available-areas" type="application/json">{!! json_encode($areas ?? []) !!}</script>
+    <script id="available-roles" type="application/json">{!! json_encode(($roles ?? collect())->pluck('name')) !!}</script>
+
     <script>
     // Areas and Roles data for JS
-    const availableAreas = @json($areas ?? []);
-    const availableRoles = @json(($roles ?? collect())->pluck('name'));
+    const availableAreas = JSON.parse(document.getElementById('available-areas').textContent);
+    const availableRoles = JSON.parse(document.getElementById('available-roles').textContent);
     let extraRoleCount = 0;
 
     // Search employee
@@ -551,8 +563,8 @@
                 document.getElementById('detLastName').textContent = emp.last_name;
                 document.getElementById('detTaxCode').textContent = emp.tax_code || '—';
                 document.getElementById('detBirthDate').textContent = emp.birth_date || '—';
-                document.getElementById('detType').innerHTML = emp.type === 'internal' 
-                    ? '<span class="badge bg-primary">Interno</span>' 
+                document.getElementById('detType').innerHTML = emp.type === 'internal'
+                    ? '<span class="badge bg-primary">Interno</span>'
                     : '<span class="badge bg-info">Esterno</span>';
                 document.getElementById('detEmail').textContent = emp.email || emp.personal_email || '—';
                 document.getElementById('detPosition').textContent = emp.position || emp.job_title || '—';

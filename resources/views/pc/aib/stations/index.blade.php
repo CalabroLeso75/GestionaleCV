@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <span>Postazioni AIB (Antincendio Boschivo)</span>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+            <h2 class="h4 font-weight-bold text-dark mb-0">Postazioni AIB (Antincendio Boschivo)</h2>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStationModal">
                 <i class="fas fa-plus me-2"></i>Nuova Postazione
             </button>

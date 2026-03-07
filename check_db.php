@@ -1,26 +1,23 @@
 <?php
-$host = '127.0.0.1';
-$db   = 'gestionale_cv';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
+$user = \App\Models\User::where('email', 'raffaele.cusano@calabriaverde.eu')->first();
+if (!$user) {
+    echo "User not found\n";
+    exit;
+}
+echo "User roles: " . $user->roles->pluck('name')->implode(', ') . "\n";
+$sections = \App\Models\DashboardSection::visibleTo($user);
+echo "Visible sections:\n";
+foreach($sections as $s) {
+    echo "- " . $s->title . " (" . $s->route . ") [Active: " . $s->is_active . "]\n";
+}
 
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-    $stmt = $pdo->query("SHOW TABLES LIKE 'employees'");
-    $table = $stmt->fetch();
-    if ($table) {
-        echo "Table employees exists.";
-    } else {
-        echo "Table employees does NOT exist.";
-    }
-} catch (\PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+$all = \App\Models\DashboardSection::all();
+echo "\nAll sections:\n";
+foreach($all as $s) {
+    echo "- " . $s->title . " (" . $s->route . ") [Active: " . $s->is_active . "]\n";
 }

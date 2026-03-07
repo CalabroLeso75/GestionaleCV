@@ -1,0 +1,97 @@
+/* ===== STILE GENERALE ===== */
+fieldset {
+  border: 2px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #fefefe;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+fieldset legend {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #005f2f;
+  padding: 0 10px;
+}
+
+/* ===== INPUT PRIMARI ===== */
+select.input-primario,
+textarea.input-primario,
+input.input-primario {
+  border: 2px solid #008000;
+  background-color: #eaffea;
+  padding: 8px;
+  font-size: 1em;
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* ===== INPUT SECONDARI ===== */
+select.input-secondario,
+textarea.input-secondario,
+input.input-secondario {
+  border: 2px solid #cccc00;
+  background-color: #ffffe6;
+  padding: 7px;
+  font-size: 0.95em;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* ===== INPUT TERZIARI ===== */
+input.input-terziario,
+textarea.input-terziario,
+select.input-terziario {
+  border: 1px dashed #aaa;
+  background-color: #f0f0f0;
+  padding: 6px;
+  font-size: 0.9em;
+  width: 100%;
+  margin-bottom: 6px;
+  font-style: italic;
+  color: #444;
+}
+
+/* ===== STILE CAMPI CONDIZIONATI ===== */
+#dettagli-insediamento,
+#prossimita-infrastrutture,
+#prossimita-ostacoli,
+#motivo-incerto {
+  transition: all 0.3s ease-in-out;
+  border-left: 4px solid #ccc;
+  padding-left: 12px;
+  margin-top: 10px;
+}
+
+/* ===== STILE SPECIFICO MOTIVO INCERTO ===== */
+#motivo-incerto small {
+  color: darkred;
+  font-weight: bold;
+}
+
+/* ===== RADIO BUTTON PRESENZA PERSONE ===== */
+#presenza-persone {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #aaa;
+  border-left: 4px solid #005f2f;
+  background-color: #f4fdf4;
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+
+#presenza-persone label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+#presenza-persone input[type="radio"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+  accent-color: #008000;
+  margin-bottom: 5px;
+}

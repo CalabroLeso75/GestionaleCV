@@ -96,7 +96,7 @@
                 </div>
 
                 {{-- Modulo nuova organizzazione --}}
-                <div id="new_organization_form" class="mt-4 p-3 border rounded bg-light" style="{{ old('organization_id') == 'new' ? '' : 'display:none;' }}">
+                <div id="new_organization_form" class="mt-4 p-3 border rounded bg-light" @if(old('organization_id') != 'new') style="display:none;" @endif>
                     <h6 class="fw-bold mb-3"><i class="fas fa-plus-circle me-1"></i> Nuova Organizzazione</h6>
                     <div class="row g-3">
                         <div class="col-md-6">

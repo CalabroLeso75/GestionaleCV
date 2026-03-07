@@ -41,38 +41,10 @@
 
     {{-- Statistiche rapide --}}
     <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-            <div class="card hr-card shadow-sm h-100">
-                <div class="card-header-custom" style="background: linear-gradient(135deg, #2e7d32, #43a047);">
-                    <div class="stat-number">{{ number_format($stats['total_internal']) }}</div>
-                    <div class="stat-label">Dipendenti Interni</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card hr-card shadow-sm h-100">
-                <div class="card-header-custom" style="background: linear-gradient(135deg, #1565c0, #1e88e5);">
-                    <div class="stat-number">{{ number_format($stats['active_internal']) }}</div>
-                    <div class="stat-label">Attivi</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card hr-card shadow-sm h-100">
-                <div class="card-header-custom" style="background: linear-gradient(135deg, #e65100, #fb8c00);">
-                    <div class="stat-number">{{ number_format($stats['aib_qualified']) }}</div>
-                    <div class="stat-label">Qualificati AIB</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card hr-card shadow-sm h-100">
-                <div class="card-header-custom" style="background: linear-gradient(135deg, #6a1b9a, #8e24aa);">
-                    <div class="stat-number">{{ number_format($stats['total_external']) }}</div>
-                    <div class="stat-label">Personale Esterno</div>
-                </div>
-            </div>
-        </div>
+        <x-kpi-card color="green"  label="Dipendenti Interni" :value="number_format($stats['total_internal'])" />
+        <x-kpi-card color="blue"   label="Attivi"             :value="number_format($stats['active_internal'])" />
+        <x-kpi-card color="orange" label="Qualificati AIB"    :value="number_format($stats['aib_qualified'])" />
+        <x-kpi-card color="purple" label="Personale Esterno"  :value="number_format($stats['total_external'])" />
     </div>
 
     {{-- Sezioni principali --}}
@@ -80,7 +52,7 @@
         {{-- GESTIONE ANAGRAFICA --}}
         <div class="col-md-6 col-lg-4">
             <a href="{{ route('hr.internal.index') }}" class="section-link">
-                <div class="card hr-card shadow-sm h-100">
+                <div class="card hr-card shadow-sm h-100" style="border-left: 4px solid #2e7d32 !important;">
                     <div class="card-body text-center p-4">
                         <div style="font-size: 3em;" class="mb-3">📋</div>
                         <h5 class="card-title fw-bold" style="color:#333;">Gestione Anagrafica</h5>
@@ -94,7 +66,7 @@
         {{-- PERSONALE ESTERNO --}}
         <div class="col-md-6 col-lg-4">
             <a href="{{ route('hr.external.index') }}" class="section-link">
-                <div class="card hr-card shadow-sm h-100">
+                <div class="card hr-card shadow-sm h-100" style="border-left: 4px solid #1565c0 !important;">
                     <div class="card-body text-center p-4">
                         <div style="font-size: 3em;" class="mb-3">🤝</div>
                         <h5 class="card-title fw-bold" style="color:#333;">Personale Esterno</h5>
@@ -108,7 +80,7 @@
         {{-- CODICE FISCALE --}}
         <div class="col-md-6 col-lg-4">
             <a href="{{ route('admin.tools.fiscal_code.index') }}" class="section-link">
-                <div class="card hr-card shadow-sm h-100">
+                <div class="card hr-card shadow-sm h-100" style="border-left: 4px solid #e65100 !important;">
                     <div class="card-body text-center p-4">
                         <div style="font-size: 3em;" class="mb-3">🔢</div>
                         <h5 class="card-title fw-bold" style="color:#333;">Codice Fiscale</h5>
@@ -121,7 +93,7 @@
 
         {{-- AREA AMMINISTRATIVA --}}
         <div class="col-md-6 col-lg-4">
-            <div class="card hr-card shadow-sm h-100" style="opacity:0.7;">
+            <div class="card hr-card shadow-sm h-100" style="opacity:0.7; border-left: 4px solid #9e9e9e !important;">
                 <div class="card-body text-center p-4">
                     <div style="font-size: 3em;" class="mb-3">🏢</div>
                     <h5 class="card-title fw-bold" style="color:#333;">Area Amministrativa</h5>
@@ -140,7 +112,5 @@
         </div>
     </div>
 
-    <div class="mt-4">
-        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">← Torna alla Dashboard</a>
-    </div>
+    <x-back-button :url="route('dashboard')" label="← Torna alla Dashboard" />
 </x-app-layout>

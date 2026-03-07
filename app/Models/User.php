@@ -60,6 +60,39 @@ class User extends Authenticatable
     }
 
     /**
+     * Direct warehouse locations assigned to the user.
+     */
+    public function warehouseLocations()
+    {
+        return $this->belongsToMany(WarehouseLocation::class, 'user_warehouse_locations')->withTimestamps();
+    }
+
+    /**
+     * Helper to get all managed warehouse locations (including children).
+     */
+    public function getAllManagedLocations()
+    {
+        if ($this->hasRole('super-admin') || $this->email === 'raffaele.cusano@calabriaverde.eu') {
+            return WarehouseLocation::all();
+        }
+
+        $directLocations = $this->warehouseLocations;
+        $allLocations = collect();
+
+        foreach ($directLocations as $loc) {
+            $allLocations->push($loc);
+            // Recursively get children if needed, or just 1 level for now
+            // Assumiamo max 2-3 livelli (Distretto -> Magazzino)
+            $allLocations = $allLocations->merge($loc->children);
+            foreach ($loc->children as $child) {
+                $allLocations = $allLocations->merge($child->children);
+            }
+        }
+
+        return $allLocations->unique('id')->values();
+    }
+
+    /**
      * Send the password reset notification in Italian.
      */
     public function sendPasswordResetNotification($token): void

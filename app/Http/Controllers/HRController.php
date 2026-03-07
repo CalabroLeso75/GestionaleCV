@@ -20,11 +20,11 @@ class HRController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('super-admin')) {
+        if ($user && $user->hasRole('super-admin')) {
             return true;
         }
 
-        return DB::table('user_area_roles')
+        return $user && DB::table('user_area_roles')
             ->where('user_id', $user->id)
             ->where('area', 'Risorse Umane')
             ->whereIn('role', ['responsabile', 'operatore'])
@@ -100,7 +100,11 @@ class HRController extends Controller
             $query->where('organization_id', $request->organization_id);
         }
 
-        $employees = $query->paginate(30)->withQueryString();
+        $perPage = in_array((int) $request->get('per_page', 30), [30, 50, 100, 200])
+            ? (int) $request->get('per_page', 30)
+            : 30;
+
+        $employees = $query->paginate($perPage)->withQueryString();
 
         $statusCounts = [
             'all' => InternalEmployee::count(),
@@ -111,7 +115,7 @@ class HRController extends Controller
         ];
 
         $canEdit = $this->canEdit();
-        
+
         \App\Services\ActivityLogger::log('view', null, null, "Consultazione elenco Anagrafica Personale (Filtri: " . json_encode($request->all()) . ")");
 
         return view('hr.internal.index', compact('employees', 'statusCounts', 'canEdit'));
@@ -183,7 +187,7 @@ class HRController extends Controller
         $employee->fill($validated);
         $dirty = $employee->getDirty();
         $changes = [];
-        
+
         $labels = [
             'first_name' => 'Nome',
             'last_name' => 'Cognome',
@@ -207,14 +211,14 @@ class HRController extends Controller
         foreach ($dirty as $key => $value) {
             $label = $labels[$key] ?? $key;
             $oldValue = $employee->getOriginal($key);
-            
+
             // Format values for human readability
             $fmt = function($v) {
                 if ($v === true || $v === 1 || $v === '1') return 'Sì';
                 if ($v === false || $v === 0 || $v === '0') return 'No';
                 return $v ?? 'N/D';
             };
-            
+
             $changes[] = "{$label}: [" . $fmt($oldValue) . " → " . $fmt($value) . "]";
         }
 
@@ -222,9 +226,9 @@ class HRController extends Controller
 
         if (count($changes) > 0) {
             \App\Services\ActivityLogger::log(
-                'update', 
-                'InternalEmployee', 
-                $id, 
+                'update',
+                'InternalEmployee',
+                $id,
                 "Modificati dati dipendente {$employee->first_name} {$employee->last_name}. Variazioni: " . implode("; ", $changes)
             );
         } else {
@@ -307,7 +311,7 @@ class HRController extends Controller
     public function createExternal()
     {
         $this->authorizeEdit();
-        
+
         // Sort: "Nessuna Organizzazione" first, then others alphabetically
         $organizations = Organization::orderByRaw("CASE WHEN name = 'Nessuna Organizzazione' THEN 0 ELSE 1 END")
             ->orderBy('name')
@@ -366,9 +370,9 @@ class HRController extends Controller
         $employee = ExternalEmployee::create($validated);
 
         \App\Services\ActivityLogger::log(
-            'create', 
-            'ExternalEmployee', 
-            $employee->id, 
+            'create',
+            'ExternalEmployee',
+            $employee->id,
             "Creato nuovo collaboratore esterno: {$employee->first_name} {$employee->last_name} (CF: {$employee->tax_code})"
         );
 
@@ -382,7 +386,7 @@ class HRController extends Controller
     {
         $employee = ExternalEmployee::with('organization')->findOrFail($id);
         $canEdit = $this->canEdit();
-        
+
         // Sort: "Nessuna Organizzazione" first, then others alphabetically
         $organizations = Organization::orderByRaw("CASE WHEN name = 'Nessuna Organizzazione' THEN 0 ELSE 1 END")
             ->orderBy('name')
@@ -560,9 +564,8 @@ class HRController extends Controller
 
         $areaRole = DB::table('user_area_roles')->where('id', $areaRoleId)->first();
 
-        DB::table('user_area_roles')->where('id', $areaRoleId)->delete();
-
         if ($areaRole) {
+            DB::table('user_area_roles')->where('id', $areaRoleId)->delete();
             \App\Services\ActivityLogger::logSecurity("Rimosso ruolo '{$areaRole->role}' per area '{$areaRole->area}' dal dipendente interno ID: {$employeeId}");
         }
 

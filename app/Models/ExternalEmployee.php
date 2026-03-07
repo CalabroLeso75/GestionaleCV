@@ -36,6 +36,17 @@ class ExternalEmployee extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    // User credentials morph relation
+    public function credentials()
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
+
+    public function resourceAssignments()
+    {
+        return $this->morphMany(ResourceAssignment::class, 'assignee');
+    }
     
     public function birthCity()
     {

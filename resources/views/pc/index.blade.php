@@ -26,7 +26,7 @@
             @forelse($assignedAreas as $area)
             <div class="col-12 col-sm-6 col-lg-4 d-flex">
                 <div class="card shadow-sm w-100 border-0 overflow-hidden area-card" 
-                     style="border-left: 4px solid {{ $area['color'] }} !important;">
+                     {!! 'style="border-left: 4px solid ' . $area['color'] . ' !important;"' !!}>
 
                     <a href="{{ $area['url'] }}" class="card-body p-4 text-center d-flex flex-column text-decoration-none">
                         <div class="mb-3" style="font-size: 2.5em;">{{ $area['icon'] }}</div>
@@ -38,7 +38,7 @@
                                 <!-- Role Badge -->
                                 <div>
                                     <span class="badge rounded-pill px-3 py-1" 
-                                          style="background-color: {{ $area['color'] }}15; color: {{ $area['color'] }}; border: 1px solid {{ $area['color'] }}30; font-size: 0.8em;">
+                                          {!! 'style="background-color: ' . $area['color'] . '15; color: ' . $area['color'] . '; border: 1px solid ' . $area['color'] . '30; font-size: 0.8em;"' !!}>
                                         <i class="fas fa-user-shield me-1"></i> {{ $area['role'] }}
                                     </span>
                                 </div>
@@ -58,7 +58,7 @@
                                 
                                 <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
                                     <span class="badge rounded-pill px-3 py-1 shadow-sm" 
-                                          style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }}; font-size: 0.75em; min-width: 140px;">
+                                          {!! 'style="background-color: ' . $c['bg'] . '; color: ' . $c['text'] . '; font-size: 0.75em; min-width: 140px;"' !!}>
                                         Livello {{ $lv }}: {{ $area['privilege_label'] }}
                                     </span>
                                     

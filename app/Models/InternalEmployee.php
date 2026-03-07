@@ -43,6 +43,17 @@ class InternalEmployee extends Model
         'operational_roles' => 'array',
     ];
 
+    // External user credentials relation
+    public function credentials()
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
+
+    public function resourceAssignments()
+    {
+        return $this->morphMany(ResourceAssignment::class, 'assignee');
+    }
+
     /**
      * Get the user that represents this employee.
      */

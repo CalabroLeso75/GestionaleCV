@@ -9,7 +9,7 @@
               <nav aria-label="Navigazione secondaria">
                 <a class="it-opener d-lg-none" data-bs-toggle="collapse" href="#menu-principale" role="button" aria-expanded="false" aria-controls="menu-principale">
                   <span>Menu</span>
-                  <svg class="icon" aria-hidden="true"><use href="{{ asset('public/sprites.php') }}#it-expand"></use></svg>
+                  <svg class="icon" aria-hidden="true"><use href="{{ asset('sprites.php') }}#it-expand"></use></svg>
                 </a>
               </nav>
             </div>
@@ -58,7 +58,8 @@
           <div class="col-12">
             <div class="it-header-center-content-wrapper">
               <div class="it-brand-wrapper">
-                <a href="{{ Auth::check() ? route('dashboard') : route('welcome') }}">
+                <a href="{{ Auth::check() ? route('dashboard') : route('welcome') }}" class="d-flex align-items-center text-decoration-none">
+                  <img src="{{ asset('images/logoCalabriaVerde.png') }}" alt="Logo Calabria Verde" style="height: 80px; margin-right: 15px;">
                   <div class="it-brand-text">
                     <div class="it-brand-title">Gestionale CV</div>
                     <div class="it-brand-tagline">Sistema Informativo Aziendale</div>

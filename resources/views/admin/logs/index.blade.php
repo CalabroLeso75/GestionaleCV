@@ -90,7 +90,7 @@
                             </thead>
                             <tbody>
                                 @forelse($logs as $log)
-                                    <tr class="cursor-pointer" onclick="showLogDetails({{ $log->id }})">
+                                    <tr class="cursor-pointer" onclick="showLogDetails('{{ $log->id }}')">
                                         <td class="text-center no-print" onclick="event.stopPropagation()">
                                             <input type="checkbox" class="form-check-input row-select" value="{{ $log->id }}" data-log='@json($log)'>
                                         </td>
@@ -189,16 +189,23 @@
         }
     </style>
 
+    @php
+        $formattedLogs = [];
+        foreach($logs as $l) {
+            $logArray = is_object($l) && method_exists($l, 'toArray') ? $l->toArray() : (array) $l;
+            $formattedLogs[$logArray['id']] = array_merge($logArray, [
+                'user_fullName' => isset($l->user) && $l->user ? $l->user->name . ' ' . $l->user->surname : 'Sistema',
+                'user_email' => isset($l->user) && $l->user ? $l->user->email : ''
+            ]);
+        }
+    @endphp
+
+    <script id="log-data" type="application/json">
+        {!! json_encode($formattedLogs) !!}
+    </script>
+
     <script>
-        const logData = {
-            @foreach($logs as $log)
-                "{{ $log->id }}": {
-                    ...{!! json_encode($log) !!}, 
-                    user_fullName: "{{ $log->user ? $log->user->name . ' ' . $log->user->surname : 'Sistema' }}",
-                    user_email: "{{ $log->user ? $log->user->email : '' }}"
-                },
-            @endforeach
-        };
+        const logData = JSON.parse(document.getElementById('log-data').textContent);
 
         function showLogDetails(id) {
             const data = logData[id];

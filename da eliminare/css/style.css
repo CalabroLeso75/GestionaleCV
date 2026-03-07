@@ -1,0 +1,275 @@
+/* ===================================================
+   File: /css/style.css
+   Autore: Raffaele Bruno Cusano
+   Descrizione: foglio di stile principale organizzato per sezioni tematiche
+   =================================================== */
+
+/* ===================== VARIABILI GLOBALI ===================== */
+:root {
+    --primary-color: #ff5722;
+    --primary-hover: #e64a19;
+    --light-bg: #f9f9f9;
+    --menu-bg: #333;
+    --menu-hover: #ff7043;
+    --border-color: #ccc;
+    --input-bg: #f0f0f0;
+    --highlight: darkgreen;
+}
+
+/* ===================== STILI GENERALI ===================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+input[type="hidden"] {
+    background-color: var(--input-bg);
+    border: 1px dashed #aaa;
+    padding: 5px;
+    font-size: 0.9em;
+}
+
+#contenuto-nota-tecnica {
+    white-space: pre-wrap;
+    font-family: "Times New Roman", serif;
+    font-size: 1em;
+    background: var(--light-bg);
+    padding: 12px;
+    border-left: 4px solid var(--highlight);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===================== HEADER E FOOTER ===================== */
+header, footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+}
+
+/* ===================== MENU A SCOMPARSA ===================== */
+.menu-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.menu-toggle {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+}
+
+.menu {
+    background: var(--menu-bg);
+    width: 100%;
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 999;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li {
+    border-bottom: 1px solid #555;
+}
+
+.menu ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.menu ul li a:hover {
+    background: var(--menu-hover);
+}
+
+.hide-menu {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* ===================== CONTENITORI GENERALI ===================== */
+.conversion-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.conversion-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+
+.conversion-container h3 {
+    margin-top: 15px;
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: bold;
+    text-align: center;
+}
+
+.conversion-container select, 
+.conversion-container input, 
+.conversion-container button {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.conversion-container button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.conversion-container button:hover {
+    background: var(--primary-hover);
+}
+
+.dashboard-section {
+    margin: 0 auto;              /* centra orizzontalmente */
+    padding: 40px 20px;          /* spazio interno */
+    max-width: 800px;            /* larghezza massima leggibile */
+    width: 100%;                 /* occupa tutto lo spazio disponibile */
+    text-align: left;            /* allineamento del testo */
+    box-sizing: border-box;
+}
+
+
+/* ===================== RISULTATI E TABELLE ===================== */
+#result {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#ephemeridesTable {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    text-align: center;
+}
+
+#ephemeridesTable th {
+    background: var(--primary-color);
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    padding: 12px;
+}
+
+#ephemeridesTable td {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+/* ===================== RESPONSIVE DESIGN ===================== */
+@media (max-width: 768px) {
+    .conversion-container {
+        width: 100%;
+    }
+
+    .menu-toggle, .hide-menu, 
+    .conversion-container select, 
+    .conversion-container input, 
+    .conversion-container button {
+        font-size: 16px;
+    }
+
+    #ephemeridesTable {
+        width: 100%;
+    }
+}
+
+/* ===================== BUSSOLA DINAMICA ===================== */
+#compass-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 80vw;
+    max-width: 500px;
+    height: auto;
+}
+
+#compass-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.vertical-button,
+.vertical-select {
+    display: block;
+    width: 90%;
+    margin: 5px auto;
+    padding: 6px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.vertical-button:hover,
+.vertical-select:hover {
+    background-color: var(--primary-hover);
+}
+
+/* ===================== Cambia il simbolo del marker sulla mappa ===================== */
+.leaflet-div-icon.leaflet-editing-icon {
+    background-color: #d32f2f; /* colore rosso scuro */
+    border: 1px solid #333;
+    border-radius: 50%; /* trasforma il quadrato in un cerchio */
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}

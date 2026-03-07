@@ -1,0 +1,380 @@
+/* MENU A SCOMPARSA */
+.menu-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+/* Pulsante Hamburger */
+.menu-toggle {
+    background: #ff5722;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Menu inizialmente nascosto */
+.menu {
+    background: #333;
+    width: 100%;
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 999;
+}
+
+/* Stile del menu */
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li {
+    border-bottom: 1px solid #555;
+}
+
+.menu ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.menu ul li a:hover {
+    background: #ff7043;
+}
+
+/* Pulsante per nascondere il menu */
+.hide-menu {
+    background: #ff5722;
+    color: white;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* HEADER E FOOTER CENTRATI */
+header, footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+}
+
+/* CONTENITORE GENERALE */
+.conversion-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* LABELS */
+.conversion-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* LABEL RISULTATO */
+.conversion-container h3 {
+    margin-top: 15px;
+    font-size: 20px;
+    color: #ff5722;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* INPUT, MENU A TENDINA E PULSANTI - UNIFORMITA' */
+.conversion-container select, 
+.conversion-container input, 
+.conversion-container button {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* PULSANTE CONVERTI */
+.conversion-container button {
+    background: #ff5722;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.conversion-container button:hover {
+    background: #e64a19;
+}
+
+/* TABELLA CENTRATA */
+#result {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#ephemeridesTable {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    text-align: center;
+}
+
+#ephemeridesTable th {
+    background: #ff5722;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    padding: 12px;
+}
+
+#ephemeridesTable td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .conversion-container {
+        width: 100%;
+    }
+
+    .menu-toggle, .hide-menu, 
+    .conversion-container select, 
+    .conversion-container input, 
+    .conversion-container button {
+        font-size: 16px;
+    }
+
+    #ephemeridesTable {
+        width: 100%;
+    }
+}
+
+/* --- STILE AGGIUNTIVO PER BUSSOLA DINAMICA --- */
+
+#compass-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 80vw;
+    max-width: 500px;
+    height: auto;
+}
+
+#compass-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.vertical-button,
+.vertical-select {
+    display: block;
+    width: 90%;
+    margin: 5px auto;
+    padding: 6px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #ff5722; /* stesso colore del tasto menu */
+    color: white;
+}
+
+.vertical-button:hover,
+.vertical-select:hover {
+    background-color: #e64a19;
+}
+
+
+/* FIELDSET RESPONSIVO per richiesta mezzo aereo */
+fieldset {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background-color: #fdfdfd;
+}
+
+/* Adattamento per input, select, label all'interno dei gruppi */
+fieldset input,
+fieldset select,
+fieldset label,
+fieldset textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Per assicurare buona leggibilità anche su mobile */
+@media (max-width: 768px) {
+    fieldset input,
+    fieldset select,
+    fieldset label,
+    fieldset textarea {
+        font-size: 1em;
+    }
+}
+
+
+/* Intestazioni dei fieldset più grandi e in grassetto */
+fieldset legend {
+    font-size: 1.6em;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Caratteri più grandi per tutto il contenuto */
+fieldset label,
+fieldset input,
+fieldset select,
+fieldset textarea {
+    font-size: 1.2em;
+}
+
+/* Etichette affiancate ai checkbox */
+fieldset input[type="checkbox"] + label,
+fieldset input[type="radio"] + label {
+    display: inline;
+    font-weight: normal;
+    font-size: 1.2em;
+    margin-left: 5px;
+}
+
+
+/* Migliora leggibilità globale */
+body {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+/* Titoli schede ancora più visibili */
+fieldset legend {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #005500;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input e label ancora più leggibili */
+fieldset input,
+fieldset select,
+fieldset label,
+fieldset textarea {
+    font-size: 1.3em;
+}
+
+/* Pulsanti */
+button,
+.main-button {
+    font-size: 1.3em;
+    padding: 10px 20px;
+    margin-top: 15px;
+}
+
+
+/* Aumenta visibilità generale */
+body, main, fieldset {
+    font-size: 1.4em;
+}
+
+/* Migliora accessibilità del menu hamburger */
+.menu-toggle,
+.hide-menu,
+.menu a,
+.menu ul li {
+    font-size: 1.5em !important;
+    padding: 15px;
+}
+
+/* Etichette checkbox affiancate correttamente */
+fieldset input[type="checkbox"] {
+    vertical-align: middle;
+    margin-right: 8px;
+}
+fieldset input[type="checkbox"] + label {
+    display: inline;
+    font-size: 1.3em;
+}
+
+/* Migliora spacing dei gruppi e centratura */
+fieldset {
+    padding: 25px;
+}
+
+
+/* Riduci dimensione delle intestazioni delle schede */
+fieldset legend {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #004400;
+}
+
+/* Migliora leggibilità per input e label */
+fieldset label,
+fieldset input,
+fieldset select,
+fieldset textarea {
+    font-size: 1.35em;
+    line-height: 1.6;
+}
+
+/* Etichette checkbox allineate correttamente */
+fieldset .checkbox-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+/* Uniforma lo stile della sezione 'Vento' */
+fieldset select {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 1.3em;
+    box-sizing: border-box;
+}

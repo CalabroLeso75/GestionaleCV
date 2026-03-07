@@ -13,6 +13,7 @@ class Location extends Model
         'tipo_sede',
         'indirizzo',
         'citta',
+        'localita',
         'provincia',
         'cap',
         'lat',

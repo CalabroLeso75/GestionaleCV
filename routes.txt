@@ -1,0 +1,110 @@
+
+  GET|HEAD  / ................................................................................................ welcome
+  GET|HEAD  admin ........................................................................................ admin.index
+  GET|HEAD  admin/ai/architect ................................ admin.ai.architect › Admin\AIArchitectController@index
+  POST      admin/ai/audit ..................................... admin.ai.audit › Admin\AIArchitectController@runAudit
+  GET|HEAD  admin/logs .......................................... admin.logs.index › Admin\ActivityLogController@index
+  GET|HEAD  admin/sections ............................ admin.sections.index › Admin\SectionManagementController@index
+  POST      admin/sections ............................ admin.sections.store › Admin\SectionManagementController@store
+  PUT       admin/sections/{id} ..................... admin.sections.update › Admin\SectionManagementController@update
+  DELETE    admin/sections/{id} ................... admin.sections.destroy › Admin\SectionManagementController@destroy
+  GET|HEAD  admin/settings ..................................... admin.site.index › Admin\SiteSettingsController@index
+  PUT       admin/settings ................................... admin.site.update › Admin\SiteSettingsController@update
+  GET|HEAD  admin/smtp ......................................... admin.smtp.index › Admin\SmtpSettingsController@index
+  PUT       admin/smtp ....................................... admin.smtp.update › Admin\SmtpSettingsController@update
+  POST      admin/smtp/test ...................................... admin.smtp.test › Admin\SmtpSettingsController@test
+  GET|HEAD  admin/style ............................................................................ admin.style.index
+  GET|HEAD  admin/tools/fiscal-code ............ admin.tools.fiscal_code.index › Admin\FiscalCodeToolsController@index
+  POST      admin/tools/fiscal-code/calculate admin.tools.fiscal_code.calculate › Admin\FiscalCodeToolsController@cal…
+  POST      admin/tools/fiscal-code/reverse admin.tools.fiscal_code.reverse › Admin\FiscalCodeToolsController@reverse
+  GET|HEAD  admin/users ..................................... admin.users.index › Admin\UserManagementController@index
+  DELETE    admin/users/area-role/{areaRoleId} admin.users.removeAreaRole › Admin\UserManagementController@removeArea…
+  POST      admin/users/create-from-employee admin.users.createFromEmployee › Admin\UserManagementController@createFr…
+  GET|HEAD  admin/users/employee-detail/{type}/{id} admin.users.employeeDetail › Admin\UserManagementController@emplo…
+  GET|HEAD  admin/users/search-employees admin.users.searchEmployees › Admin\UserManagementController@searchEmployees
+  DELETE    admin/users/{id} .............................. admin.users.delete › Admin\UserManagementController@delete
+  POST      admin/users/{id}/approve .................... admin.users.approve › Admin\UserManagementController@approve
+  POST      admin/users/{id}/area-role .......... admin.users.addAreaRole › Admin\UserManagementController@addAreaRole
+  POST      admin/users/{id}/reintegrate ........ admin.users.reintegrate › Admin\UserManagementController@reintegrate
+  POST      admin/users/{id}/reject ....................... admin.users.reject › Admin\UserManagementController@reject
+  POST      admin/users/{id}/role ................. admin.users.assignRole › Admin\UserManagementController@assignRole
+  DELETE    admin/users/{id}/role ................. admin.users.removeRole › Admin\UserManagementController@removeRole
+  POST      admin/users/{id}/toggle-status .... admin.users.toggleStatus › Admin\UserManagementController@toggleStatus
+  POST      admin/users/{id}/toggle-type .......... admin.users.toggleType › Admin\UserManagementController@toggleType
+  GET|HEAD  api/cities/{province_id} ................................... api.cities › Api\LocationController@getCities
+  GET|HEAD  api/countries ........................................ api.countries › Api\LocationController@getCountries
+  GET|HEAD  api/provinces ........................................ api.provinces › Api\LocationController@getProvinces
+  GET|HEAD  autoparco .................................................... autoparco.index › AutoparcoController@index
+  POST      autoparco .................................................... autoparco.store › AutoparcoController@store
+  POST      autoparco/certifications ......... autoparco.certifications.store › AutoparcoController@storeCertification
+  DELETE    autoparco/certifications/{id} .. autoparco.certifications.delete › AutoparcoController@deleteCertification
+  GET|HEAD  autoparco/certifications/{userId} ... autoparco.certifications.get › AutoparcoController@getCertifications
+  GET|HEAD  autoparco/{vehicle} ............................................ autoparco.show › AutoparcoController@show
+  PUT       autoparco/{vehicle} ........................................ autoparco.update › AutoparcoController@update
+  POST      autoparco/{vehicle}/assign ................................. autoparco.assign › AutoparcoController@assign
+  GET|HEAD  autoparco/{vehicle}/logs .................................... autoparco.logs › AutoparcoController@getLogs
+  POST      autoparco/{vehicle}/return .......................... autoparco.return › AutoparcoController@returnVehicle
+  POST      autoparco/{vehicle}/revision ..................... autoparco.addRevision › AutoparcoController@addRevision
+  POST      autoparco/{vehicle}/status ..................... autoparco.updateStatus › AutoparcoController@updateStatus
+  GET|HEAD  confirm-password .............................. password.confirm › Auth\ConfirmablePasswordController@show
+  POST      confirm-password ................................................ Auth\ConfirmablePasswordController@store
+  GET|HEAD  dashboard ...................................................................................... dashboard
+  GET|HEAD  debug-state .............................................................................................. 
+  POST      email/verification-notification ... verification.send › Auth\EmailVerificationNotificationController@store
+  GET|HEAD  force-fix-db ............................................................................................. 
+  GET|HEAD  forgot-password ............................... password.request › Auth\PasswordResetLinkController@create
+  POST      forgot-password .................................. password.email › Auth\PasswordResetLinkController@store
+  GET|HEAD  hr ......................................................................... hr.index › HRController@index
+  GET|HEAD  hr/export ........................................................ hr.export › HRController@exportFiltered
+  GET|HEAD  hr/external ........................................... hr.external.index › HRController@externalEmployees
+  POST      hr/external ............................................... hr.external.store › HRController@storeExternal
+  GET|HEAD  hr/external/create ...................................... hr.external.create › HRController@createExternal
+  GET|HEAD  hr/external/{id} ............................................ hr.external.show › HRController@showExternal
+  PUT       hr/external/{id} ........................................ hr.external.update › HRController@updateExternal
+  GET|HEAD  hr/internal ........................................... hr.internal.index › HRController@internalEmployees
+  POST      hr/internal/bulk-update ......................... hr.internal.bulkUpdate › HRController@bulkUpdateInternal
+  GET|HEAD  hr/internal/{id} ............................................ hr.internal.show › HRController@showInternal
+  PUT       hr/internal/{id} ........................................ hr.internal.update › HRController@updateInternal
+  POST      hr/internal/{id}/area-role .................... hr.internal.addAreaRole › HRController@addEmployeeAreaRole
+  DELETE    hr/internal/{id}/area-role/{areaRoleId} . hr.internal.removeAreaRole › HRController@removeEmployeeAreaRole
+  GET|HEAD  login ................................................. login › Auth\AuthenticatedSessionController@create
+  POST      login .......................................................... Auth\AuthenticatedSessionController@store
+  POST      logout .............................................. logout › Auth\AuthenticatedSessionController@destroy
+  PUT       password ................................................ password.update › Auth\PasswordController@update
+  GET|HEAD  pc ........................................................... pc.index › ProtezioneCivileController@index
+  GET|HEAD  pc/aib/personale .................................... pc.aib.personnel.index › EmployeeAibController@index
+  POST      pc/aib/personale/{employee}/toggle-aib ...... pc.aib.personnel.toggleAib › EmployeeAibController@toggleAib
+  GET|HEAD  pc/aib/postazioni ...................................... pc.aib.locations.index › LocationController@index
+  PUT       pc/aib/postazioni/{station} .................... pc.aib.stations.update › LocationController@updateStation
+  DELETE    pc/aib/postazioni/{station} .................. pc.aib.stations.destroy › LocationController@destroyStation
+  POST      pc/aib/sedi .................................... pc.aib.locations.store › LocationController@storeLocation
+  PUT       pc/aib/sedi/{location} ....................... pc.aib.locations.update › LocationController@updateLocation
+  DELETE    pc/aib/sedi/{location} ..................... pc.aib.locations.destroy › LocationController@destroyLocation
+  POST      pc/aib/sedi/{location}/postazioni ................ pc.aib.stations.store › LocationController@storeStation
+  GET|HEAD  pc/aib/squadre .............................................. pc.aib.teams.index › AibTeamController@index
+  POST      pc/aib/squadre .............................................. pc.aib.teams.store › AibTeamController@store
+  GET|HEAD  pc/aib/squadre/nuova ...................................... pc.aib.teams.create › AibTeamController@create
+  GET|HEAD  pc/aib/telefoni ....................................... pc.aib.phones.index › CompanyPhoneController@index
+  POST      pc/aib/telefoni ....................................... pc.aib.phones.store › CompanyPhoneController@store
+  PUT       pc/aib/telefoni/{phone} ............................. pc.aib.phones.update › CompanyPhoneController@update
+  DELETE    pc/aib/telefoni/{phone} ........................... pc.aib.phones.destroy › CompanyPhoneController@destroy
+  GET|HEAD  pc/emergenze ............................................. pc.emergencies.index › IncidentController@index
+  GET|HEAD  pc/emergenze/import ................................ pc.emergencies.import › IncidentController@importForm
+  POST      pc/emergenze/import ............................... pc.emergencies.import.post › IncidentController@import
+  GET|HEAD  profile ............................................................ profile.edit › ProfileController@edit
+  PATCH     profile ........................................................ profile.update › ProfileController@update
+  DELETE    profile ...................................................... profile.destroy › ProfileController@destroy
+  GET|HEAD  register ................................................. register › Auth\RegisteredUserController@create
+  POST      register ............................................................. Auth\RegisteredUserController@store
+  POST      reset-password ......................................... password.store › Auth\NewPasswordController@store
+  GET|HEAD  reset-password/{token} ................................ password.reset › Auth\NewPasswordController@create
+  GET|HEAD  storage/{path} ............................................................................. storage.local
+  GET|HEAD  test-db .................................................................................................. 
+  GET|HEAD  up ....................................................................................................... 
+  GET|HEAD  verify-email ................................ verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD  verify-email/{id}/{hash} ................................ verification.verify › Auth\VerifyEmailController
+  GET|HEAD  verify-otp .............................................. otp.verify › Auth\OtpVerificationController@show
+  POST      verify-otp ..................................... otp.verify.submit › Auth\OtpVerificationController@verify
+
+                                                                                                  Showing [106] routes
+

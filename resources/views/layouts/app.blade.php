@@ -11,6 +11,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.9.0/dist/css/bootstrap-italia.min.css" rel="stylesheet">
     <!-- Bootstrap Italia JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.9.0/dist/js/bootstrap-italia.bundle.min.js"></script>
+
+    <style>
+        /* Nascondi il bottone scroll-to-top di Bootstrap Italia (evita freccia gigante) */
+        .it-back-to-top, [data-bs-toggle="back-to-top"], .back-to-top {
+            display: none !important;
+        }
+        /* Blocca le icone SVG giganti iniettate da Bootstrap Italia sulle pagine di paginazione */
+        .pagination .page-link svg,
+        .pagination .page-link icon,
+        .pagination .page-link::before,
+        .pagination .page-link::after {
+            display: none !important;
+            content: none !important;
+        }
+        /* Forza dimensione massima per qualsiasi SVG non referenziato */
+        main svg:not([width]):not([height]):not([class*="icon"]) {
+            max-width: 32px !important;
+            max-height: 32px !important;
+        }
+    </style>
+    @stack('styles')
 </head>
 <body>
     @include('layouts.navigation')
@@ -26,5 +47,6 @@
         {{ $slot }}
     </main>
     
+    @stack('scripts')
 </body>
 </html>

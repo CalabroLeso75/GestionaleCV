@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <span>Gestione Emergenze PC - Real-time Dashboard</span>
-            <div>
-                <a href="{{ route('pc.emergencies.import') }}" class="btn btn-outline-primary btn-sm me-2">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+            <h2 class="h4 font-weight-bold text-dark mb-0">Gestione Emergenze PC - Real-time Dashboard</h2>
+            <div class="d-flex gap-2">
+                <a href="{{ route('pc.emergencies.import') }}" class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-file-import me-1"></i>Importa PC2
                 </a>
                 <button class="btn btn-primary btn-sm">
@@ -50,7 +50,8 @@
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm incident-card overflow-hidden" data-id="{{ $incident->id }}">
                 <div class="card-header border-0 bg-transparent py-3 px-4 d-flex justify-content-between align-items-center">
-                    <span class="badge rounded-pill priority-badge-{{ strtolower(str_replace(' ', '-', $incident->priorita)) }}">
+                    @php $badgeClass = 'priority-badge-' . strtolower(str_replace(' ', '-', $incident->priorita)); @endphp
+                    <span class="badge rounded-pill {{ $badgeClass }}">
                         {{ $incident->priorita }}
                     </span>
                     <small class="text-muted">{{ \Carbon\Carbon::parse($incident->data_ora)->diffForHumans() }}</small>
@@ -122,6 +123,7 @@
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }

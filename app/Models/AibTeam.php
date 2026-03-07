@@ -21,6 +21,11 @@ class AibTeam extends Model
         'note'
     ];
 
+    protected $casts = [
+        'data_inizio' => 'date',
+        'data_fine' => 'date',
+    ];
+
     public function stations()
     {
         return $this->belongsToMany(AibStation::class, 'aib_team_stations', 'team_id', 'station_id');
@@ -39,6 +44,15 @@ class AibTeam extends Model
     public function members()
     {
         return $this->hasMany(AibTeamMember::class, 'team_id');
+    }
+    public function mobileDevices()
+    {
+        return $this->belongsToMany(MobileDevice::class, 'aib_team_mobile_devices', 'team_id', 'mobile_device_id');
+    }
+
+    public function assetLogs()
+    {
+        return $this->hasMany(TeamAssetLog::class, 'team_id');
     }
     
 
