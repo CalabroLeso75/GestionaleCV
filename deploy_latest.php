@@ -122,6 +122,9 @@ try {
     ]);
     echo 'DB Migrated DOS Table. ';
 
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    echo 'Storage Linked. ';
+
     \Illuminate\Support\Facades\Artisan::call('route:clear');
     \Illuminate\Support\Facades\Artisan::call('cache:clear');
     \Illuminate\Support\Facades\Artisan::call('config:clear');

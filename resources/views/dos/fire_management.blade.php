@@ -277,6 +277,17 @@
                 <input type="hidden" name="area_hectares" id="f_area_hectares">
                 <input type="hidden" name="front_meters" id="f_front_meters">
 
+                <!-- Hidden inputs per Previsioni Vento -->
+                <input type="hidden" name="wind_forecast_2h_speed" id="f_w2s">
+                <input type="hidden" name="wind_forecast_2h_dir" id="f_w2d">
+                <input type="hidden" name="wind_forecast_2h_gust" id="f_w2g">
+                <input type="hidden" name="wind_forecast_4h_speed" id="f_w4s">
+                <input type="hidden" name="wind_forecast_4h_dir" id="f_w4d">
+                <input type="hidden" name="wind_forecast_4h_gust" id="f_w4g">
+                <input type="hidden" name="wind_forecast_6h_speed" id="f_w6s">
+                <input type="hidden" name="wind_forecast_6h_dir" id="f_w6d">
+                <input type="hidden" name="wind_forecast_6h_gust" id="f_w6g">
+
                 <div class="row text-center mb-3 mt-3 d-none" id="gis_summary_box">
                     <div class="col-6 px-1">
                         <label class="d-block mb-1" style="font-size: 0.70rem; color: #1cc88a;">Area Stimata (Ha)</label>
@@ -791,6 +802,21 @@
                                             </div>
                                         </div>
                                     `;
+
+                                    // Popola i campi hidden per il form
+                                    if(offset === 2) {
+                                        document.getElementById('f_w2s').value = ws;
+                                        document.getElementById('f_w2d').value = wdComp;
+                                        document.getElementById('f_w2g').value = wg;
+                                    } else if(offset === 4) {
+                                        document.getElementById('f_w4s').value = ws;
+                                        document.getElementById('f_w4d').value = wdComp;
+                                        document.getElementById('f_w4g').value = wg;
+                                    } else if(offset === 6) {
+                                        document.getElementById('f_w6s').value = ws;
+                                        document.getElementById('f_w6d').value = wdComp;
+                                        document.getElementById('f_w6g').value = wg;
+                                    }
                                 }
                             });
 

@@ -67,32 +67,95 @@
                                         <!-- Modal Dettaglio -->
                                         <div class="modal fade" id="modal-{{ $report->id }}" tabindex="-1" aria-hidden="true">
                                           <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                              <div class="modal-header">
-                                                <h5 class="modal-title">Dettaglio Emergenza #{{ $report->id }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <div class="modal-content border-0 shadow-lg">
+                                              <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title fw-bold">
+                                                    <i class="fas fa-info-circle me-2"></i>Dettaglio Emergenza #{{ $report->id }}
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                               </div>
-                                              <div class="modal-body">
-                                                <div class="row text-sm">
-                                                    <div class="col-md-6 mb-3">
-                                                        <strong>Data:</strong> {{ $report->created_at->format('d/m/Y H:i') }}<br>
-                                                        <strong>Segnalante:</strong> {{ $report->user->name ?? 'N/D' }} {{ $report->user->surname ?? '' }} ({{ $report->role_snapshot }})<br>
-                                                        <strong>Distanza da Operatore:</strong> {{ $report->distance ? $report->distance . " metri" : "N/D" }}<br>
+                                              <div class="modal-body p-4 text-sm">
+                                                <div class="row">
+                                                    <!-- Colonna 1: Localizzazione -->
+                                                    <div class="col-md-6 border-end">
+                                                        <h6 class="text-primary fw-bold text-uppercase small mb-3 border-bottom pb-1">
+                                                            <i class="fas fa-map-marker-alt me-1"></i> Localizzazione
+                                                        </h6>
+                                                        <ul class="list-unstyled mb-4">
+                                                            <li class="mb-2"><strong>Data/Ora:</strong> {{ $report->created_at->format('d/m/Y H:i') }}</li>
+                                                            <li class="mb-2"><strong>Comune:</strong> {{ $report->municipality ?: 'N/D' }} ({{ $report->province ?: 'ND' }})</li>
+                                                            <li class="mb-2"><strong>Toponimo:</strong> <span class="text-info">{{ $report->toponym ?: 'N/D' }}</span></li>
+                                                            <li class="mb-2">
+                                                                <strong>Coordinate:</strong>
+                                                                <code class="bg-light p-1 rounded">{{ number_format($report->fire_lat, 5) }}, {{ number_format($report->fire_lng, 5) }}</code>
+                                                                <a href="https://www.google.com/maps?q={{ $report->fire_lat }},{{ $report->fire_lng }}" target="_blank" class="ms-2 btn btn-xs btn-outline-secondary py-0">
+                                                                    <i class="fas fa-external-link-alt"></i> Vedi Mappa
+                                                                </a>
+                                                            </li>
+                                                            <li class="mb-2"><strong>Distanza da Operatore:</strong> {{ $report->distance ? number_format($report->distance) . " metri" : "N/D" }}</li>
+                                                        </ul>
+
+                                                        <h6 class="text-success fw-bold text-uppercase small mb-3 border-bottom pb-1">
+                                                            <i class="fas fa-drafting-compass me-1"></i> Analisi GIS
+                                                        </h6>
+                                                        <ul class="list-unstyled">
+                                                            @if($report->area_hectares) <li class="mb-2 text-success"><strong>Area Stimata:</strong> {{ $report->area_hectares }} Ha</li> @endif
+                                                            @if($report->front_meters) <li class="mb-2 text-danger"><strong>Fronte Fiamma:</strong> ~{{ $report->front_meters }} m</li> @endif
+                                                            <li class="mt-3">
+                                                                @if($report->kml_path)
+                                                                    <a href="{{ asset('storage/' . $report->kml_path) }}" class="btn btn-sm btn-success w-100" download>
+                                                                        <i class="fas fa-download me-2"></i> Scarica File Perimetro (KML)
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-muted small italic">Nessun dato vettoriale disponibile</span>
+                                                                @endif
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <strong>Meteo Attuale:</strong> {{ $report->temperature ? $report->temperature . "°C" : "N/D" }} | {{ $report->wind_speed ? $report->wind_speed . " km/h" : "N/D" }} (Dir: {{ $report->wind_direction ?: "N/D" }})<br>
-                                                        <strong>Previsione +2h:</strong> {{ $report->wind_forecast_2h_speed ? $report->wind_forecast_2h_speed . " km/h (Raff: {$report->wind_forecast_2h_gust})" : "N/D" }}<br>
-                                                        <strong>Previsione +4h:</strong> {{ $report->wind_forecast_4h_speed ? $report->wind_forecast_4h_speed . " km/h (Raff: {$report->wind_forecast_4h_gust})" : "N/D" }}<br>
-                                                        <strong>Previsione +6h:</strong> {{ $report->wind_forecast_6h_speed ? $report->wind_forecast_6h_speed . " km/h (Raff: {$report->wind_forecast_6h_gust})" : "N/D" }}<br>
-                                                    </div>
-                                                    <div class="col-12 mt-2">
-                                                        <strong>Note:</strong>
-                                                        <p class="border p-2 bg-light">{{ $report->notes ?: 'Nessuna nota aggiuntiva' }}</p>
+
+                                                    <!-- Colonna 2: Meteo & Note -->
+                                                    <div class="col-md-6 ps-md-4">
+                                                        <h6 class="text-warning fw-bold text-uppercase small mb-3 border-bottom pb-1">
+                                                            <i class="fas fa-wind me-1"></i> Situazione Meteo
+                                                        </h6>
+                                                        <div class="bg-light p-3 rounded mb-4">
+                                                            <div class="mb-2"><strong>Attuale:</strong> {{ $report->temperature ? $report->temperature . "°C" : "N/D" }} | {{ $report->wind_speed ? $report->wind_speed . " km/h" : "N/D" }} (Dir: {{ $report->wind_direction ?: "N/D" }})</div>
+                                                            <div class="small text-muted mb-1 border-top pt-2">Forecast prossime ore:</div>
+                                                            <div class="row text-center mt-2">
+                                                                <div class="col-4 px-1">
+                                                                    <div class="fw-bold">+2h</div>
+                                                                    <div style="font-size: 0.75rem;">{{ $report->wind_forecast_2h_speed ?: '-' }} km/h</div>
+                                                                    <div class="badge bg-secondary" style="font-size: 0.6rem;">{{ $report->wind_forecast_2h_dir }}</div>
+                                                                </div>
+                                                                <div class="col-4 px-1">
+                                                                    <div class="fw-bold">+4h</div>
+                                                                    <div style="font-size: 0.75rem;">{{ $report->wind_forecast_4h_speed ?: '-' }} km/h</div>
+                                                                    <div class="badge bg-secondary" style="font-size: 0.6rem;">{{ $report->wind_forecast_4h_dir }}</div>
+                                                                </div>
+                                                                <div class="col-4 px-1">
+                                                                    <div class="fw-bold">+6h</div>
+                                                                    <div style="font-size: 0.75rem;">{{ $report->wind_forecast_6h_speed ?: '-' }} km/h</div>
+                                                                    <div class="badge bg-secondary" style="font-size: 0.6rem;">{{ $report->wind_forecast_6h_dir }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <h6 class="text-secondary fw-bold text-uppercase small mb-3 border-bottom pb-1">
+                                                            <i class="fas fa-sticky-note me-1"></i> Note Operative
+                                                        </h6>
+                                                        <div class="p-2 bg-light border-start border-4 border-secondary border-opacity-25 rounded-end italic" style="min-height: 80px; font-style: italic;">
+                                                            {{ $report->notes ?: 'Nessun commento aggiuntivo inserito.' }}
+                                                        </div>
+
+                                                        <div class="mt-4 text-end text-muted x-small" style="font-size:0.7rem;">
+                                                            Inviato da: {{ $report->user->name ?? 'N/D' }} {{ $report->user->surname ?? '' }}<br>
+                                                            Identificativo Report: #{{ $report->id }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                               </div>
-                                              <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                              <div class="modal-footer bg-light border-0">
+                                                <button type="button" class="btn btn-primary px-4 fw-bold" data-bs-dismiss="modal">Chiudi</button>
                                               </div>
                                             </div>
                                           </div>

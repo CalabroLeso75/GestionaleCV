@@ -39,6 +39,21 @@ class EmergencyReport extends Model
         'kml_path',
     ];
 
+    protected $casts = [
+        'op_lat' => 'float',
+        'op_lng' => 'float',
+        'fire_lat' => 'float',
+        'fire_lng' => 'float',
+        'area_hectares' => 'float',
+        'front_meters' => 'integer',
+        'temperature' => 'float',
+        'wind_speed' => 'float',
+        'wind_forecast_2h_speed' => 'float',
+        'wind_forecast_4h_speed' => 'float',
+        'wind_forecast_6h_speed' => 'float',
+        'created_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
